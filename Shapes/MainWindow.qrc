@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/MainWindow">
+        <file>icons/circle.ico</file>
+        <file>icons/move.ico</file>
+        <file>icons/open.ico</file>
+        <file>icons/save.ico</file>
+        <file>icons/triangle.ico</file>
+        <file>icons/rectangle.ico</file>
+        <file>icons/line.ico</file>
+    </qresource>
+</RCC>

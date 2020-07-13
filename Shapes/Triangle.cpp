@@ -1,18 +1,18 @@
 #include "Triangle.h"
 
-Triangle::Triangle(QPoint p, int w, int h, QColor c) : Shape(p, w, h, c) 
+Triangle::Triangle(QPoint p, int w, int h, QColor c) noexcept : Shape(p, w, h, c)
 { 
 	setSize(QSize(w, h));
 }
 
-void Triangle::setSize(QSize size)
+void Triangle::setSize(QSize size) noexcept
 {
-	r = (size.width() + size.height()) / 2;
-	width = r*2;
-	height = r*2;
+	m_radius = (size.width() + size.height()) / 2;
+	m_width = m_radius*2;
+	m_height = m_radius*2;
 }
 
-QPoint rotate(QPoint point, QPoint axis, double angle)
+QPoint rotate(QPoint point, const QPoint& axis, double angle) noexcept
 {
 	point.rx() -= axis.x();
 	point.ry() -= axis.y();
@@ -27,15 +27,15 @@ QPoint rotate(QPoint point, QPoint axis, double angle)
 	return result;
 }
 
-void Triangle::draw(QPainter & qp)
+void Triangle::draw(QPainter& qp)
 {
-	QPoint a = position;
-	a.rx() += r;
+	QPoint a = m_position;
+	a.rx() += m_radius;
 
 	QPoint b = rotate(a, center(), 2 * acos(-1) / 3);
 	QPoint c = rotate(b, center(), 2 * acos(-1) / 3);
 
-	qp.setPen(QPen(colour, PEN_WIDTH));
+	qp.setPen(QPen(m_color, PEN_WIDTH));
 	qp.drawLine(a, b);
 	qp.drawLine(a, c);
 	qp.drawLine(c, b);

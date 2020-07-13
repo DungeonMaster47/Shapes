@@ -1,42 +1,42 @@
 #include "Line.h"
 
-Line::Line(std::vector<std::unique_ptr<Shape>>& s, int firstShapeIndex, int secondShapeIndex) : shapes(s), firstShapeIdx(firstShapeIndex), secondShapeIdx(secondShapeIndex) { }
+Line::Line(VecUnqPtrShape& s, int firstShapeIndex, int secondShapeIndex) noexcept : m_shapes(s), m_firstShapeIdx(firstShapeIndex), m_secondShapeIdx(secondShapeIndex) { }
 
 void Line::draw(QPainter& qp)
 {
-	if (firstShapeIdx >= 0 && secondShapeIdx >= 0)
+	if (m_firstShapeIdx >= 0 && m_secondShapeIdx >= 0)
 	{
-		qp.setPen(QPen(colour, 2));
-		qp.drawLine(shapes[firstShapeIdx]->center(), shapes[secondShapeIdx]->center());
+		qp.setPen(QPen(m_color, 2));
+		qp.drawLine(m_shapes[m_firstShapeIdx]->center(), m_shapes[m_secondShapeIdx]->center());
 	}
 }
 
-int Line::firstShapeIndex()
+int Line::firstShapeIndex() const noexcept
 {
-	return firstShapeIdx;
+	return m_firstShapeIdx;
 }
 
-int Line::secondShapeIndex()
+int Line::secondShapeIndex() const noexcept
 {
-	return secondShapeIdx;
+	return m_secondShapeIdx;
 }
 
-const QColor& Line::color()
+const QColor& Line::color() const noexcept
 {
-	return colour;
+	return m_color;
 }
 
-void Line::setColor(const QColor& c)
+void Line::setColor(const QColor& c) noexcept
 {
-	colour = c;
+	m_color = c;
 }
 
-void Line::setFirstShapeIndex(int firstShapeIndex)
+void Line::setFirstShapeIndex(int firstShapeIndex) noexcept
 {
-	firstShapeIdx = firstShapeIndex;
+	m_firstShapeIdx = firstShapeIndex;
 }
 
-void Line::setSecondShapeIndex(int secondShapeIndex)
+void Line::setSecondShapeIndex(int secondShapeIndex) noexcept
 {
-	secondShapeIdx = secondShapeIndex;
+	m_secondShapeIdx = secondShapeIndex;
 }

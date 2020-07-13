@@ -16,18 +16,18 @@ class DrawingField : public QWidget
 
 public:
 	DrawingField(QWidget* parent);
-	void setColor(const QColor& c);
+	void setColor(const QColor& c) noexcept;
 	void setMouseHandler(std::unique_ptr<IMouseHandler>&& h);
-	const QColor& color();
+	QColor color() const noexcept;
 
-	std::vector<std::unique_ptr<Shape>> shapes;
+	VecUnqPtrShape shapes;
 	std::vector<Line> lines;
 private:
-	std::unique_ptr<IMouseHandler> mouseHandler;
+	std::unique_ptr<IMouseHandler> m_mouseHandler;
 	void paintEvent(QPaintEvent* e) override;
 	void mousePressEvent(QMouseEvent* e) override;
 	void mouseMoveEvent(QMouseEvent* e) override;
 	void mouseReleaseEvent(QMouseEvent* e) override;
 
-	QColor colour;
+	QColor m_color = Qt::black;
 };

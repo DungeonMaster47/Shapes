@@ -1,6 +1,6 @@
 #include "Circle.h"
 
-Circle::Circle(QPoint p, int w, int h, QColor c) : Shape(p, w, h, c) { }
+Circle::Circle(QPoint p, int w, int h, QColor c) noexcept : Shape(p, w, h, c) { }
 
 void Circle::draw(QPainter& qp)
 {

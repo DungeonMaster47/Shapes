@@ -2,23 +2,23 @@
 
 DrawingField::DrawingField(QWidget* parent) : QWidget(parent) 
 {
-	mouseHandler = std::make_unique<DefaultMouseHandler>();
-	colour = Qt::black;
+	m_mouseHandler = std::make_unique<DefaultMouseHandler>(this);
+	m_color = Qt::black;
 }
 
-void DrawingField::setColor(const QColor& c)
+void DrawingField::setColor(const QColor& c) noexcept
 {
-	colour = c;
+	m_color = c;
 }
 
 void DrawingField::setMouseHandler(std::unique_ptr<IMouseHandler>&& h)
 {
-	mouseHandler = std::move(h);
+	m_mouseHandler = std::move(h);
 }
 
-const QColor& DrawingField::color()
+QColor DrawingField::color() const noexcept
 {
-	return colour;
+	return m_color;
 }
 
 void DrawingField::paintEvent(QPaintEvent* e)
@@ -31,7 +31,7 @@ void DrawingField::paintEvent(QPaintEvent* e)
 		s->draw(qp);
 	} 
 
-	for (auto l : lines)
+	for (auto&& l : lines)
 	{
 		l.draw(qp);
 	}
@@ -39,18 +39,18 @@ void DrawingField::paintEvent(QPaintEvent* e)
 
 void DrawingField::mousePressEvent(QMouseEvent* e)
 {
-	mouseHandler->mousePress(e);
+	m_mouseHandler->mousePress(e);
 	update();
 }
 
 void DrawingField::mouseMoveEvent(QMouseEvent* e)
 {
-	mouseHandler->mouseMove(e);
+	m_mouseHandler->mouseMove(e);
 	update();
 }
 
 void DrawingField::mouseReleaseEvent(QMouseEvent* e)
 {
-	mouseHandler->mouseRelease(e);
+	m_mouseHandler->mouseRelease(e);
 	update();
 }

@@ -4,153 +4,114 @@ MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 {
 	setGeometry(0, 0, 640, 480);
-	frame = new DrawingField(this);
-	setCentralWidget(frame);
+	m_frame = new DrawingField(this);
+	setCentralWidget(m_frame);
 	createToolbar();
 }
 
 void MainWindow::createToolbar()
 {
-	toolbar = addToolBar("toolbar");
+	m_toolbar = addToolBar("toolbar");
 
 	QAction* openFile = new QAction(QIcon(":MainWindow/icons/open.ico"), "Open file", this);
-	connect(openFile, &QAction::triggered, this, &MainWindow::onOpenFile);
-	toolbar->addAction(openFile);
+	connect(openFile, &QAction::triggered, this, &MainWindow::onOpenFileBtn);
+	m_toolbar->addAction(openFile);
 
 	QAction* saveFile = new QAction(QIcon(":MainWindow/icons/save.ico"), "Save file", this);
-	connect(saveFile, &QAction::triggered, this, &MainWindow::onSaveFile);
-	toolbar->addAction(saveFile);
+	connect(saveFile, &QAction::triggered, this, &MainWindow::onSaveFileBtn);
+	m_toolbar->addAction(saveFile);
 
-	toolbar->addSeparator();
+	m_toolbar->addSeparator();
 	
 	QAction* circle = new QAction(QIcon(":MainWindow/icons/circle.ico"), "Circle", this);
 	circle->setCheckable(true);
-	connect(circle, &QAction::toggled, this, &MainWindow::onCircle);
-	toolbar->addAction(circle);
+	connect(circle, &QAction::toggled, this, &MainWindow::onShapeBtn<Circle>);
+	m_toolbar->addAction(circle);
 	
 	QAction* rectangle = new QAction(QIcon(":MainWindow/icons/rectangle.ico"), "Rectangle", this);
-	connect(rectangle, &QAction::toggled, this, &MainWindow::onRectangle);
+	connect(rectangle, &QAction::toggled, this, &MainWindow::onShapeBtn<Rectangle>);
 	rectangle->setCheckable(true);
-	toolbar->addAction(rectangle);
+	m_toolbar->addAction(rectangle);
 	
 	QAction* triangle = new QAction(QIcon(":MainWindow/icons/triangle.ico"), "Triangle", this);
-	connect(triangle, &QAction::toggled, this, &MainWindow::onTriangle);
+	connect(triangle, &QAction::toggled, this, &MainWindow::onShapeBtn<Triangle>);
 	triangle->setCheckable(true);
-	toolbar->addAction(triangle);
+	m_toolbar->addAction(triangle);
 
 	QAction* line = new QAction(QIcon(":MainWindow/icons/line.ico"), "Line", this);
-	connect(line, &QAction::toggled, this, &MainWindow::onLine);
+	connect(line, &QAction::toggled, this, &MainWindow::onLineBtn);
 	line->setCheckable(true);
-	toolbar->addAction(line);
+	m_toolbar->addAction(line);
 	
 	QAction* move = new QAction(QIcon(":MainWindow/icons/move.ico"), "Move", this);
-	connect(move, &QAction::toggled, this, &MainWindow::onMove);
+	connect(move, &QAction::toggled, this, &MainWindow::onMoveBtn);
 	move->setCheckable(true);
-	toolbar->addAction(move);
+	m_toolbar->addAction(move);
 
-	toolbar->addSeparator();
+	m_toolbar->addSeparator();
 
-	QPixmap black = QPixmap(64, 64);
+	QPixmap black = QPixmap(ICON_SIZE, ICON_SIZE);
 	black.fill(Qt::black);
-	color = new QAction(QIcon(black), "Color", this);
-	connect(color, &QAction::triggered, this, &MainWindow::onColor);
-	toolbar->addAction(color);
+	m_color = new QAction(QIcon(black), "Color", this);
+	connect(m_color, &QAction::triggered, this, &MainWindow::onColorBtn);
+	m_toolbar->addAction(m_color);
 }
 
-void MainWindow::uncheckToolButtons()
+void MainWindow::checkToolButtons(bool check)
 {
-	for (auto a : toolbar->actions())
+	for (auto a : m_toolbar->actions())
 	{
 		if (a->isChecked() && a != sender())
 		{
-			a->setChecked(false);
+			a->setChecked(check);
 		}
 	}
 }
 
-void MainWindow::onOpenFile()
+void MainWindow::onOpenFileBtn()
 {
 	QMessageBox::information(this, "Placeholder", "Open file placeholder");
 }
 
-void MainWindow::onSaveFile()
+void MainWindow::onSaveFileBtn()
 {
 	QMessageBox::information(this, "Placeholder", "Save file placeholder");
 }
 
-void MainWindow::onCircle(bool checked)
+void MainWindow::onLineBtn(bool checked)
 {
 	if (checked)
 	{
-		uncheckToolButtons();
-		frame->setMouseHandler(std::make_unique<ShapeMouseHandler<Circle>>(frame->color(), frame->shapes));
+		checkToolButtons(false);
+		m_frame->setMouseHandler(std::make_unique<LineMouseHandler>(m_frame));
 	}
 	else
 	{
-		frame->setMouseHandler(std::make_unique<DefaultMouseHandler>());
+		m_frame->setMouseHandler(std::make_unique<DefaultMouseHandler>(m_frame));
 	}
 }
 
-void MainWindow::onRectangle(bool checked)
+void MainWindow::onMoveBtn(bool checked)
 {
 	if (checked)
 	{
-		uncheckToolButtons();
-		frame->setMouseHandler(std::make_unique<ShapeMouseHandler<Rectangle>>(frame->color(), frame->shapes));
+		checkToolButtons(false);
+		m_frame->setMouseHandler(std::make_unique<MoveMouseHandler>(m_frame));
 	}
 	else
 	{
-		frame->setMouseHandler(std::make_unique<DefaultMouseHandler>());
+		m_frame->setMouseHandler(std::make_unique<DefaultMouseHandler>(m_frame));
 	}
 }
 
-void MainWindow::onTriangle(bool checked)
-{
-	if (checked)
-	{
-		uncheckToolButtons();
-		frame->setMouseHandler(std::make_unique<ShapeMouseHandler<Triangle>>(frame->color(), frame->shapes));
-	}
-	else
-	{
-		frame->setMouseHandler(std::make_unique<DefaultMouseHandler>());
-	}
-}
-
-void MainWindow::onLine(bool checked)
-{
-	if (checked)
-	{
-		uncheckToolButtons();
-		frame->setMouseHandler(std::make_unique<LineMouseHandler>(frame->shapes, frame->lines, frame->color()));
-	}
-	else
-	{
-		frame->setMouseHandler(std::make_unique<DefaultMouseHandler>());
-	}
-}
-
-void MainWindow::onMove(bool checked)
-{
-	if (checked)
-	{
-		uncheckToolButtons();
-		frame->setMouseHandler(std::make_unique<MoveMouseHandler>(frame->shapes));
-	}
-	else
-	{
-		frame->setMouseHandler(std::make_unique<DefaultMouseHandler>());
-	}
-}
-
-void MainWindow::onColor()
+void MainWindow::onColorBtn()
 {
 	QColor newColor = QColorDialog::getColor();
 	if (newColor.isValid())
 	{
-		frame->setColor(newColor);
-		QPixmap newIcon = QPixmap(64, 64);
+		m_frame->setColor(newColor);
+		QPixmap newIcon = QPixmap(ICON_SIZE, ICON_SIZE);
 		newIcon.fill(newColor);
-		color->setIcon(QIcon(newIcon));
+		m_color->setIcon(QIcon(newIcon));
 	}
 }

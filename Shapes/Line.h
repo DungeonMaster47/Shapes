@@ -5,18 +5,18 @@
 class Line
 {
 public:
-	Line(std::vector<std::unique_ptr<Shape>>& s, int firstShapeIndex = -1, int secondShapeIndex = -1);
+	Line(VecUnqPtrShape& s, int firstShapeIndex = -1, int secondShapeIndex = -1) noexcept;
 	void draw(QPainter& qp);
-	int firstShapeIndex();
-	int secondShapeIndex();
-	const QColor& color();
-	void setColor(const QColor& c);
-	void setFirstShapeIndex(int firstShapeIndex);
-	void setSecondShapeIndex(int secondShapeIndex);
+	int firstShapeIndex() const noexcept;
+	int secondShapeIndex() const noexcept;
+	const QColor& color() const noexcept;
+	void setColor(const QColor& c) noexcept;
+	void setFirstShapeIndex(int firstShapeIndex) noexcept;
+	void setSecondShapeIndex(int secondShapeIndex) noexcept;
 private:
-	std::vector<std::unique_ptr<Shape>>& shapes;
-	int firstShapeIdx;
-	int secondShapeIdx;
-	QColor colour = Qt::black;
+	VecUnqPtrShape& m_shapes;
+	int m_firstShapeIdx;
+	int m_secondShapeIdx;
+	QColor m_color = Qt::black;
 };
 

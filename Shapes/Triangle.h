@@ -4,10 +4,10 @@
 class Triangle : public Shape
 {
 public:
-	Triangle(QPoint p, int w, int h, QColor c);
-	void setSize(QSize) override;
+	Triangle(QPoint p, int w, int h, QColor c) noexcept;
+	void setSize(QSize) noexcept override;
 	void draw(QPainter& qp) override;
 private:
-	int r;
+	int m_radius;
 };
 

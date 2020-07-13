@@ -1,6 +1,6 @@
 #include "Rectangle.h"
 
-Rectangle::Rectangle(QPoint p, int w, int h, QColor c) : Shape(p, w, h, c) { }
+Rectangle::Rectangle(QPoint p, int w, int h, QColor c) noexcept : Shape(p, w, h, c) { }
 
 void Rectangle::draw(QPainter& qp)
 {

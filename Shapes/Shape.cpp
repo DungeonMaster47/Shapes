@@ -1,42 +1,47 @@
 #include "Shape.h"
 
-Shape::Shape(QPoint p, int w, int h, QColor c) : position(p), width(w), height(h), colour(c) {}
+Shape::Shape(QPoint p, int w, int h, QColor c) noexcept : m_position(p), m_width(w), m_height(h), m_color(c) {}
 
-QRect Shape::rect() const
+QSize Shape::size() const noexcept
 {
-	return QRect(position, QSize(width, height));
+	return QSize(m_width, m_height);
 }
 
-QPoint Shape::center() const
+QRect Shape::rect() const noexcept
 {
-	QPoint result = position;
-	result.rx() += width/2;
-	result.ry() += height/2;
+	return QRect(m_position, QSize(m_width, m_height));
+}
+
+QPoint Shape::center() const noexcept
+{
+	QPoint result = m_position;
+	result.rx() += m_width/2;
+	result.ry() += m_height/2;
 	return result;
 }
 
-QPoint Shape::pos() const
+QPoint Shape::pos() const noexcept
 {
-	return position;
+	return m_position;
 }
 
-QColor Shape::color() const
+QColor Shape::color() const noexcept
 {
-	return colour;
+	return m_color;
 }
 
-void Shape::setSize(QSize size)
+void Shape::setSize(QSize size) noexcept
 {
-	width = size.width();
-	height = size.height();
+	m_width = size.width();
+	m_height = size.height();
 }
 
-void Shape::setPos(QPoint p)
+void Shape::setPos(QPoint p) noexcept
 {
-	position = p;
+	m_position = p;
 }
 
-void Shape::setColor(QColor c)
+void Shape::setColor(QColor c) noexcept
 {
-	colour = c;
+	m_color = c;
 }

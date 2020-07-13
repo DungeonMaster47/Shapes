@@ -70,12 +70,35 @@ void MainWindow::checkToolButtons(bool check)
 
 void MainWindow::onOpenFileBtn()
 {
-	QMessageBox::information(this, "Placeholder", "Open file placeholder");
+	QString filename = QFileDialog::getOpenFileName(this, "Open File", QString(), "Text file (*.txt)");
+	if (filename.isEmpty())
+		return;
+	
+	m_frame->hide();
+
+	m_frame->lines.clear();
+	m_frame->shapes.clear();
+
+	QFile file(filename);
+	file.open(QIODevice::ReadOnly);
+	if (!readShapesFromFile(file))
+		QMessageBox::warning(this, "Error", "Error reading from file");
+
+	m_frame->show();
+	m_frame->update();
 }
 
 void MainWindow::onSaveFileBtn()
 {
-	QMessageBox::information(this, "Placeholder", "Save file placeholder");
+	QString filename = QFileDialog::getSaveFileName(this, "Save File", QString(), "Text file (*.txt)");
+	if (filename.isEmpty())
+		return;
+
+	QFile file(filename);
+	file.open(QIODevice::WriteOnly | QIODevice::Truncate);
+	if (!writeShapesToFile(file))
+		QMessageBox::warning(this, "Error", "Error writing to file");
+	QMessageBox::information(this, "Success", "Successfully saved to " + filename);
 }
 
 void MainWindow::onLineBtn(bool checked)
@@ -114,4 +137,117 @@ void MainWindow::onColorBtn()
 		newIcon.fill(newColor);
 		m_color->setIcon(QIcon(newIcon));
 	}
+}
+
+bool MainWindow::writeShapesToFile(QFile& file)
+{
+	if(!file.isOpen())
+		return false;
+
+	QTextStream out(&file);
+
+	for (auto&& s : m_frame->shapes)
+	{
+		try
+		{
+			dynamic_cast<Circle&>(*s);
+			out << "Circle" << endl;
+		}
+		catch (std::bad_cast) {}
+		try
+		{
+			dynamic_cast<Rectangle&>(*s);
+			out << "Rectangle" << endl;
+		}
+		catch (std::bad_cast) {}
+		try
+		{
+			dynamic_cast<Triangle&>(*s);
+			out << "Triangle" << endl;
+		}
+		catch (std::bad_cast) {}
+
+		int r, g, b, a;
+		s->color().getRgb(&r, &g, &b, &a);
+
+		out << r << ' ' << g << ' ' << b << ' ' << a << ' ' << s->pos().x() << ' ' << s->pos().y() << ' ' << s->size().width() << ' ' << s->size().height() << endl;
+	}
+
+	for (auto&& l : m_frame->lines)
+	{
+		int r, g, b, a;
+		l.color().getRgb(&r, &g, &b, &a);
+
+		out << "Line" << endl;
+		out << r << ' ' << g << ' ' << b << ' ' << a << ' ' << l.firstShapeIndex() << ' ' << l.secondShapeIndex() << endl;
+	}
+
+	return true;
+}
+
+bool MainWindow::readShapesFromFile(QFile& file)
+{
+	if (!file.isOpen())
+		return false;
+
+	QTextStream in(&file);
+
+	while (!in.atEnd())
+	{
+		QString name = in.readLine();
+		if (name.isEmpty())
+			continue;
+		
+		int r, g, b, a;
+
+		if (in.atEnd())
+			return false;
+		
+		in >> r;
+		in >> g;
+		in >> b;
+		in >> a;
+
+		if (name == "Line")
+		{
+			int firstIndex, secondIndex;
+
+			in >> firstIndex;
+			in >> secondIndex;
+
+			if (in.status() != QTextStream::Status::Ok)
+				return false;
+
+			m_frame->lines.emplace_back(m_frame->shapes, firstIndex, secondIndex, QColor(r,g,b,a));
+		}
+		else
+		{
+			QPoint pos;
+			int w, h;
+			in >> pos.rx();
+			in >> pos.ry();
+			in >> w;
+			in >> h;
+
+			if (in.status() != QTextStream::Status::Ok)
+				return false;
+
+			if (name == "Circle")
+			{
+				m_frame->shapes.push_back(std::make_unique<Circle>(pos, w, h, QColor(r, g, b, a)));
+			}
+			else if (name == "Rectangle")
+			{
+				m_frame->shapes.push_back(std::make_unique<Circle>(pos, w, h, QColor(r, g, b, a)));
+			}
+			else if (name == "Triangle")
+			{
+				m_frame->shapes.push_back(std::make_unique<Circle>(pos, w, h, QColor(r, g, b, a)));
+			}
+			else
+				return false;
+		}
+	}
+
+	return true;
 }

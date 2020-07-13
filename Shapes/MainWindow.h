@@ -2,6 +2,9 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QToolBar>
+#include <QFile>
+#include <QTextStream>
+#include <QFileDialog>
 #include <QMessageBox>
 #include <QAction>
 #include <QLayout>
@@ -29,6 +32,8 @@ private:
 	void onLineBtn(bool checked);
 	void onMoveBtn(bool checked);
 	void onColorBtn();
+	bool writeShapesToFile(QFile& file);
+	bool readShapesFromFile(QFile& file);
 
 	DrawingField* m_frame;
 	QToolBar* m_toolbar;

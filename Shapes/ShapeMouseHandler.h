@@ -13,7 +13,6 @@ public:
 	ShapeMouseHandler(DrawingField* owner) noexcept;
 	void mousePress(QMouseEvent* e) override;
 	void mouseMove(QMouseEvent* e) override;
-	void mouseRelease(QMouseEvent* e) override;
 };
 
 template<class T>
@@ -36,9 +35,4 @@ void ShapeMouseHandler<T>::mouseMove(QMouseEvent * e)
 		QPoint diff = e->pos() - m_owner->shapes.back()->pos();
 		m_owner->shapes.back()->setSize(QSize(diff.x(), diff.y()));
 	}
-}
-
-template<class T>
-void ShapeMouseHandler<T>::mouseRelease(QMouseEvent * e)
-{
 }

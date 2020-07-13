@@ -1,6 +1,6 @@
 #include "Line.h"
 
-Line::Line(VecUnqPtrShape& s, int firstShapeIndex, int secondShapeIndex) noexcept : m_shapes(s), m_firstShapeIdx(firstShapeIndex), m_secondShapeIdx(secondShapeIndex) { }
+Line::Line(VecUnqPtrShape& s, int firstShapeIndex, int secondShapeIndex, QColor c) noexcept : m_shapes(s), m_firstShapeIdx(firstShapeIndex), m_secondShapeIdx(secondShapeIndex), m_color(c) { }
 
 void Line::draw(QPainter& qp)
 {

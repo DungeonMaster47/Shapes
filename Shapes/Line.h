@@ -5,7 +5,7 @@
 class Line
 {
 public:
-	Line(VecUnqPtrShape& s, int firstShapeIndex = -1, int secondShapeIndex = -1) noexcept;
+	Line(VecUnqPtrShape& s, int firstShapeIndex = -1, int secondShapeIndex = -1, QColor c = Qt::black) noexcept;
 	void draw(QPainter& qp);
 	int firstShapeIndex() const noexcept;
 	int secondShapeIndex() const noexcept;
@@ -17,6 +17,6 @@ private:
 	VecUnqPtrShape& m_shapes;
 	int m_firstShapeIdx;
 	int m_secondShapeIdx;
-	QColor m_color = Qt::black;
+	QColor m_color;
 };
 

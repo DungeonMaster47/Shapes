@@ -3,7 +3,6 @@
 DrawingField::DrawingField(QWidget* parent) : QWidget(parent) 
 {
 	m_mouseHandler = std::make_unique<DefaultMouseHandler>(this);
-	m_color = Qt::black;
 }
 
 void DrawingField::setColor(const QColor& c) noexcept
@@ -26,7 +25,7 @@ void DrawingField::paintEvent(QPaintEvent* e)
 	QPainter qp(this);
 	qp.setRenderHint(QPainter::RenderHint::Antialiasing);
 
-	for (auto& s : shapes)
+	for (auto&& s : shapes)
 	{
 		s->draw(qp);
 	} 

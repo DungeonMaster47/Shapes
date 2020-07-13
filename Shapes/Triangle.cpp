@@ -7,7 +7,7 @@ Triangle::Triangle(QPoint p, int w, int h, QColor c) noexcept : Shape(p, w, h, c
 
 void Triangle::setSize(QSize size) noexcept
 {
-	m_radius = (size.width() + size.height()) / 2;
+	m_radius = size.width()/2;
 	m_width = m_radius*2;
 	m_height = m_radius*2;
 }

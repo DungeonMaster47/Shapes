@@ -145,6 +145,7 @@ bool MainWindow::writeShapesToFile(QFile& file)
 		return false;
 
 	QTextStream out(&file);
+	int r, g, b, a;
 
 	for (auto&& s : m_frame->shapes)
 	{
@@ -167,7 +168,6 @@ bool MainWindow::writeShapesToFile(QFile& file)
 		}
 		catch (std::bad_cast) {}
 
-		int r, g, b, a;
 		s->color().getRgb(&r, &g, &b, &a);
 
 		out << r << ' ' << g << ' ' << b << ' ' << a << ' ' << s->pos().x() << ' ' << s->pos().y() << ' ' << s->size().width() << ' ' << s->size().height() << endl;
@@ -175,7 +175,6 @@ bool MainWindow::writeShapesToFile(QFile& file)
 
 	for (auto&& l : m_frame->lines)
 	{
-		int r, g, b, a;
 		l.color().getRgb(&r, &g, &b, &a);
 
 		out << "Line" << endl;
@@ -238,11 +237,11 @@ bool MainWindow::readShapesFromFile(QFile& file)
 			}
 			else if (name == "Rectangle")
 			{
-				m_frame->shapes.push_back(std::make_unique<Circle>(pos, w, h, QColor(r, g, b, a)));
+				m_frame->shapes.push_back(std::make_unique<Rectangle>(pos, w, h, QColor(r, g, b, a)));
 			}
 			else if (name == "Triangle")
 			{
-				m_frame->shapes.push_back(std::make_unique<Circle>(pos, w, h, QColor(r, g, b, a)));
+				m_frame->shapes.push_back(std::make_unique<Triangle>(pos, w, h, QColor(r, g, b, a)));
 			}
 			else
 				return false;
